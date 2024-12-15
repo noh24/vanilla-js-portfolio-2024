@@ -1,0 +1,8 @@
+/node_modules
+/build
+/dist
+/*.min.js
+/package-lock.json
+/package.json
+/.prettierignore
+/.gitignore
