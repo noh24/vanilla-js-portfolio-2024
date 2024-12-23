@@ -1,4 +1,11 @@
 * {
+    all: unset;
+    display: block;
     margin: unset;
     padding: unset;
+    box-sizing: border-box;
+}
+
+title {
+    all:revert;
 }
