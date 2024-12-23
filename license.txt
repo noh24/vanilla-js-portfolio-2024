@@ -1,0 +1,12 @@
+Fira Code Font - Copyright 2014-2020 The Fira Code Project Authors
+Licensed under the SIL Open Font License, Version 1.1
+
+This font is included in this app and can be freely used, modified, and redistributed under the following terms:
+
+- The font cannot be sold by itself.
+- The font can be bundled, embedded, redistributed, and sold with this software.
+- Any modified versions of the font must remain under the SIL Open Font License and cannot use the reserved font name without explicit written permission from the copyright holder.
+- The font cannot be used to promote, endorse, or advertise a modified version without explicit written permission.
+
+For the full text of the SIL Open Font License, please visit:
+https://openfontlicense.org
