@@ -1,81 +1,88 @@
-import http from 'http'
 import fs from 'fs'
-import path, { dirname } from 'path'
+import http from 'http'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import livereload from 'livereload'
-import { fileURLToPath }  from 'url'
 
+const __fileName = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__fileName)
+const mimeTypes = {
+    '.ico': 'image/x-icon',
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+}
 const PORT = 3000
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 
-function serveStaticFile(filePath, contentType, res) {
-    fs.readFile(filePath, (err, content) => {
+const readFileWithLiveReload = (filePath, contentType, callBack) => {
+    fs.readFile(filePath, (err, data) => {
         if (err) {
-            if (err.code == 'ENOENT') {
-                res.writeHead(404, { 'Content-Type': 'text/html' })
-                res.end('<h1>404 Not Found</h1>', 'utf-8')
-            } else {
-                res.writeHead(500)
-                res.end(`Server Error: ${err.code}`)
-            }
-        } else {
-            if (
-                contentType == 'text/html' &&
-                process.env.NODE_ENV == 'development '
-            ) {
-                content = content.toString()
-                content = content.replace(
-                    '</body>',
-                    `<script src="http://localhost:35729/livereload.js"></script></body>`,
-                )
-            }
-
-            res.writeHead(200, { 'Content-Type': contentType })
-            res.end(content, 'utf-8')
+            return callBack(err)
         }
+
+        if (contentType === 'text/html' && process.env.NODE_ENV === 'development ') {
+            data = data.toString().replace(
+                '</body>',
+                `<script src="http://localhost:35729/livereload.js"></script></body>`
+            )
+            return callBack(null, data)
+        }
+
+        return callBack(null, data)
     })
 }
 
+const serveStaticFiles = (req, res, next) => {
+    const urlNormalized = req.url === '/' ? '/index.html' : req.url
+    const ext = path.extname(urlNormalized)
+    const contentType = mimeTypes[ext] ?? 'text/plain'
+    const directory = ext != '.ico' ? 'src' : ''
+    const filePath = path.join(__dirname, directory, urlNormalized)
+
+    readFileWithLiveReload(filePath, contentType, (err, data) => {
+        if (err) {
+            return next(err)
+        }
+        res.writeHead(200, { "content-type": contentType })
+        res.end(data)
+    })
+}
+
+const handleError = (req, res) => {
+    const indexPath = path.join(__dirname, 'src', 'index.html')
+
+    readFileWithLiveReload(indexPath, 'text/html', (err, content) => {
+        if (err) {
+            res.writeHead(500, { "content-type": "text/plain" })
+            return res.end("Internal Server Error")
+        }
+        res.writeHead(301, { Location: '/', "content-type": 'text/html' })
+        res.end(content)
+    }) 
+}
+
 const server = http.createServer((req, res) => {
-    const basePath = path.join(__dirname, 'src')
-
-    const pathTypes = {
-        '/': 'index.html',
-        '/index.css': 'index.css',
-        '/index.js': 'index.js',
-        '/about': '/about/about.html',
-        '/projects': '/projects/projects.html',
-        '/contact': '/contact/contact.html',
-    }
-
-    const filePath = path.join(basePath, pathTypes[req.url] ?? 'index.html')
-
-    const extname = path.extname(filePath).toLowerCase()
-    let mimeTypes = {
-        '.html': 'text/html',
-        '.js': 'application/javascript',
-        '.css': 'text/css',
-        '.json': 'application/json',
-        '.png': 'image/png',
-        '.jpg': 'image/jpg',
-        '.gif': 'image/gif',
-        '.svg': 'image/svg+xml',
-    }
-
-    const contentType = mimeTypes[extname] || 'application/octet-stream'
-
-    serveStaticFile(filePath, contentType, res)
+    serveStaticFiles(req, res, (err) => {
+        if (err) {
+            handleError(req, res)
+        }
+    })
 })
 
-server.listen(PORT, () => {
-    console.log(`${process.env.NODE_ENV}: Server running at http://localhost:${PORT}`)
+server.listen(3000, () => {
+    console.log(`Server is listening: http://localhost:${PORT}`)
 })
 
 if (process.env.NODE_ENV === 'development ') {
-    const liveReloadServer = livereload.createServer()
-    liveReloadServer.watch(path.join(__dirname, 'src'))
+    const liveReloadServer = livereload.createServer({
+        exts: ['html', 'js', 'css'],
+        debug: true
+    })
 
     const watchDirectory = path.join(__dirname, 'src')
+
+    liveReloadServer.watch(watchDirectory)
+
     let timer
     fs.watch(watchDirectory, { recursive: true }, (eventType, fileName) => {
         if (fileName) {
@@ -83,7 +90,7 @@ if (process.env.NODE_ENV === 'development ') {
             timer = setTimeout(() => {
                 console.log(`File changed: ${fileName}`)
                 liveReloadServer.refresh('*')
-            }, 300)
+            }, 100)
         }
     })
 }
