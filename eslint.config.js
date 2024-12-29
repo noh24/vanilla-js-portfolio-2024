@@ -1,21 +1,31 @@
 import globals from 'globals'
 import pluginJs from '@eslint/js'
+import prettier from 'prettier'
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
 	{
-		languageOptions: { globals: globals.browser },
-		extends: ['eslint:recommended', 'plugin:pretteir/recommended'],
+		languageOptions: { 
+			globals: { ...globals.browser, ...globals.node },
+			ecmaVersion: 'latest',
+			sourceType: 'module',
+		},
 		files: ['**/*.js','*.js'],
+		plugins: {
+			prettier: prettier,
+		},
+		linterOptions: {
+			reportUnusedDisableDirectives: true,
+		},
 		rules: {
 			semi: ['error', 'never'],
 			quotes: ['error', 'single'],
 			indent: ['error', 'tab'],
-			'no-console': ['warn', { allow: ['warn', 'error'] }], // Fixed "no console" typo
-			'no-unused-vars': 'warn', // Corrected syntax
-			'no-undef': 'warn', // Removed unnecessary option, as "typeof" doesn't apply when rule is disabled
+			'no-console': ['warn', { allow: ['warn', 'error'] }], 
+			'no-unused-vars': 'warn', 
+			'no-undef': 'error',
+			'prettier/prettier': 'error',
 		},
-		tabWidth: 4,
 	},
 	pluginJs.configs.recommended,
 ]
