@@ -1,23 +1,203 @@
 @font-face {
-    font-family: 'Fira Code';
-    src: url('/public/fonts/FiraCode-Regular.ttf') format('truetype'),
-        url('/public/fonts/FiraCode-Bold.ttf') format('truetype'),
-        url('/public/fonts/FiraCode-Light.ttf') format('truetype'),
-        url('/public/fonts/FiraCode-Medium.ttf') format('truetype'),
-        url('/public/fonts/FiraCode-SemiBold.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+	font-family: 'Fira Code';
+	src:
+		url('./../public/fonts/FiraCode-Regular.ttf') format('truetype'),
+		url('./../public/fonts/FiraCode-Bold.ttf') format('truetype'),
+		url('./../public/fonts/FiraCode-Light.ttf') format('truetype'),
+		url('./../public/fonts/FiraCode-Medium.ttf') format('truetype'),
+		url('./../public/fonts/FiraCode-SemiBold.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
 }
 
 * {
-    all: unset;
-    display: block;
-    margin: unset;
-    padding: unset;
-    box-sizing: border-box;
-    font-family: 'Fira Code', monospace;
+	/* all: unset; */
+	display: block;
+	margin: unset;
+	padding: unset;
+	box-sizing: border-box;
+	font-family: 'Fira Code', monospace;
+	font-size: 1em;
+	font-weight: lighter;
+	color: #454545;
+	background-color: #f0f0f0;
+	text-align: center;
 }
 
 title {
-    all:revert;
+	all: revert;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 100vh;
+	gap: 2rem;
+}
+
+a:hover {
+	cursor: pointer;
+}
+
+a:visited {
+	color: #757575;
+}
+
+main {
+	flex-grow: 1;
+}
+
+svg {
+	all: revert;
+}
+
+header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 1.5rem;
+	gap: .8rem;
+}
+
+.contactIcons {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+}
+
+.mainTitle {
+	letter-spacing: -0.5rem;
+}
+
+.projectsSection {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.projectList {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.projectList li {
+	text-decoration: underline;
+}
+
+footer {
+	margin-top: 3rem;
+	padding-bottom: 1rem;
+}
+
+/* Mobile */
+@media (min-width: 320px) {
+	.mainTitle {
+		font-size: 3rem;
+	}
+
+	.subtitle {
+		font-size: 0.8rem;
+	}
+
+	.projectTitle {
+		font-size: 1.5rem;
+	}
+
+	li {
+		font-size: 0.8rem;
+	}
+
+	.footerDiv {
+		font-size: 0.8rem;
+	}
+	
+	.nonMobile {
+		display:none;
+	}
+
+	.mobile {
+		display: flex;
+	}
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+	.mainTitle {
+		font-size: 5.5rem;
+	}
+
+	.subtitle {
+		font-size: 1rem;
+	}
+
+	.projectTitle {
+		font-size: 1.5rem;
+	}
+
+	.projectList li {
+		font-size: 1rem;
+	}
+
+	.mobile {
+		display: none;
+	}
+
+	.nonMobile {
+		display: flex;
+	}
+
+	.projectDiv {
+		display: flex;
+		gap: 3rem;
+	}
+	
+	.projectList {
+		gap: 1.5rem;
+	}
+
+	.footerDiv {
+		font-size: 1rem;
+	}
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+	.mainTitle {
+		font-size: 5.5rem;
+	}
+
+	.subtitle {
+		font-size: 1rem;
+	}
+
+	.projectTitle {
+		font-size: 1.5rem;
+	}
+
+	.projectList li {
+		font-size: 1rem;
+	}
+
+	.mobile {
+		display: none;
+	}
+
+	.nonMobile {
+		display: flex;
+	}
+
+	.projectDiv {
+		display: flex;
+		gap: 5rem;
+	}
+	
+	.projectList {
+		gap: 1.5rem;
+	}
+
+	footer {
+		padding-bottom: 0;
+	}
 }
