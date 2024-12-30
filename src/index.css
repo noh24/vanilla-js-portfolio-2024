@@ -26,6 +26,10 @@
 	transform-origin: center;
 }
 
+span {
+	display: inline-block;
+}
+
 title {
 	all: revert;
 }
